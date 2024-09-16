@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
         <div>
           <StatsCard title="Total de Tarefas" value={5} />
           <StatsCard title="Tarefas Pendentes" value={4} />
-          <StatsCard title="Tarefas concluidas" value={1} />
+          <StatsCard title="Tarefas concluídas" value={1} />
         </div>
       </div>
     </header>
