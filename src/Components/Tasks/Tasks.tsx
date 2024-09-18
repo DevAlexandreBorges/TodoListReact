@@ -1,15 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import styles from "./styles.module.scss";
-
-interface Task {
-  title: string;
-  done: boolean;
-  id: number;
-}
+import { TaskContext } from "../../context/TaskContent";
 
 export const Tasks: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState("");
-  const [tasks, setTasks] = useState([] as Task[]);
+
+  const { tasks, setTasks } = useContext(TaskContext);
 
   //funçao que valida se ira adicionar a tarefa nova.
   function handleSubmitAddTask(event: FormEvent) {
@@ -30,14 +26,27 @@ export const Tasks: React.FC = () => {
 
     setTaskTitle("");
   }
+  function handleToggleTaskStatus(taskId: number) {
+    const newTasks = tasks.map((task) => {
+      if (taskId === task.id) {
+        return {
+          ...task,
+          done: !task.done,
+        };
+      }
+      return task;
+    });
 
-  useEffect(() => {
-    const tasksOnLocalStorage = localStorage.getItem("tasks");
+    setTasks(newTasks);
+  }
 
-    if (tasksOnLocalStorage) {
-      setTasks(JSON.parse(tasksOnLocalStorage));
-    }
-  }, []);
+  function handleRemoveTask(taskId: number) {
+    const newTasks = tasks.filter((task) => task.id !== taskId);
+
+    setTasks(newTasks);
+
+    localStorage.setItem("tasks", JSON.stringify(newTasks));
+  }
   return (
     <section className={styles.container}>
       <form onSubmit={handleSubmitAddTask}>
@@ -61,8 +70,20 @@ export const Tasks: React.FC = () => {
         {tasks.map((task) => {
           return (
             <li key={task.id}>
-              <input type="checkbox" id={`task-${task.id}`} />
-              <label htmlFor={`task-${task.id}`}> {task.title}</label>
+              <input
+                type="checkbox"
+                id={`task-${task.id}`}
+                onChange={() => handleToggleTaskStatus(task.id)}
+              />
+              <label
+                className={task.done ? styles.done : ""}
+                htmlFor={`task-${task.id}`}
+              >
+                {" "}
+                {task.title}
+              </label>
+
+              <button onClick={() => handleRemoveTask(task.id)}>Remover</button>
             </li>
           );
         })}

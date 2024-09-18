@@ -36,6 +36,11 @@
       background-color: rgb(173, 95, 173);
       color: white;
     }
+
+    button:hover {
+      background-color: rgb(88, 27, 88);
+      transition: 1s;
+    }
   }
 
   ul {
@@ -56,6 +61,17 @@
       label {
         font-size: 1.1rem;
       }
+
+      button {
+        border-radius: 5px;
+        background-color: red;
+        padding: 0 1px;
+      }
     }
   }
+}
+
+.done {
+  text-decoration: line-through;
+  color: rgb(190, 187, 187);
 }
